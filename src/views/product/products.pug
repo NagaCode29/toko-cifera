@@ -1,0 +1,102 @@
+include ../partial/head
+link(rel='stylesheet' href='/static/style/dashboard.css')
+body(class="bg-dark text-light")
+    include ../partial/sidebar
+
+    div.content(class='ps-5')
+        button(type='button' class='btn btn-outline-secondary text-light mb-2' data-bs-toggle='modal' data-bs-target=`#modalAddProduct`) add-product
+
+        h2(class='my-4') Products
+
+        div.search
+            div.row
+                div.col-lg-6
+                    form(action='/products/search' method='get')
+                        input(type='date' class='mx-1' name='start')
+                        input(type='date' class='mx-1' name='end')
+                        button(type='submit' class='btn btn-primary btn-sm mb-1 mx-1') Search
+                div.col-lg-2
+                div.col-lg-4
+                    input(class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id='keyword')
+        if !!message
+            div(class=`alert alert-${status}` role="alert")=message
+        table(class='table table-secondary table-striped sortable')
+            thead
+                tr
+                    th(scope='col') No
+                    th(scope='col') Created-At
+                    th(scope='col') Code
+                    th(scope='col') Name
+                    th(scope='col') stock
+                    th(scope='col') Action
+            tbody(id='data-products')
+                - var no = 0;
+                each product in products
+                    tr
+                        - no = no+1;
+                        td(scope='row') #{no}
+                        td(id=`date${no}` class='date')=product.created_at
+                        td=product.id
+                        td=product.name
+                        td=product.stock
+                        td
+                            //a(class='btn btn-info btn-sm mx-1') Detail
+                            button(type='button' class='btn btn-outline-success btn-sm mx-1 mt-1' data-bs-toggle='modal' data-bs-target=`#modalUpdateProduct${product.id}`) update
+                            button(type='button' class='btn btn-outline-danger btn-sm mx-1 mt-1' data-bs-toggle='modal' data-bs-target=`#modal${product.id}`) Delete
+
+                            // Modal Delete
+                            div(class='modal fade' id=`modal${product.id}` tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+                                div(class='modal-dialog modal-dialog-centered')
+                                    div.modal-content
+                                        div.modal-header
+                                            h1(class="modal-title fs-5" id="exampleModalLabel") Confirmation
+                                            button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                                        div.modal-body
+                                            h3 Sure??
+                                        div.modal-footer
+                                            button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
+
+                                            a(class="btn btn-outline-danger" href=`/products/delete-product/${product.id}`) delete
+
+                            // Modal update
+                            div(class='modal fade text-dark' id=`modalUpdateProduct${product.id}` tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+                                div(class='modal-dialog modal-dialog-centered')
+                                    div.modal-content
+                                        div.modal-header
+                                            h1(class="modal-title fs-5" id="exampleModalLabel") Update Product
+                                            button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                                        div.modal-body
+                                            form(action=`/products/update-product/${product.id}` method='post')
+                                                div(class='mb-2')
+                                                    label(for="id" class="form-label") Code
+                                                    input(type="text" class="form-control" id="id" name='id' value=`${product.id}`)
+                                                div(class='mb-2')
+                                                    label(for="name" class="form-label") Name
+                                                    input(type="text" class="form-control" id="name" name='name' value=`${product.name}`)
+                                                div(class='mb-2')
+                                                    label(for="stock" class="form-label") Stock
+                                                    input(type="number" class="form-control" id="stock" name='stock' value=`${product.stock}`)
+                                                button(type='submit' class='btn btn-success form-control mt-2') Update
+
+        h2(class='text-dark') dsds
+    // Modal Add Product
+    div(class='modal fade text-dark' id='modalAddProduct' tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+        div(class='modal-dialog modal-dialog-centered')
+            div.modal-content
+                div.modal-header
+                    h1(class="modal-title fs-5" id="exampleModalLabel") Add Product
+                    button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                div.modal-body
+                    form(action='/products/add-product' method='post')
+                        div(class='mb-2')
+                            label(for="id" class="form-label") Code
+                            input(type="text" class="form-control" id="id" name='id' required)
+                        div(class='mb-2')
+                            label(for="name" class="form-label") Name
+                            input(type="text" class="form-control" id="name" name='name' required)
+                        div(class='mb-2')
+                            label(for="stock" class="form-label") Stock
+                            input(type="number" class="form-control" id="stock" name='stock' required)
+                        button(type='submit' class='btn btn-primary form-control mt-2') Add
+    script(src='/static/script/product.js')
+    include ../partial/footer

@@ -1,0 +1,13 @@
+include ../partial/head
+link(rel='stylesheet' href='/static/style/login.css')
+body(class="bg-dark text-light")
+    div(class='login-container')
+        h2 Login
+        if !!message
+            div(class=`alert alert-${status}` role="alert")=message
+        form(action='/users/login' method='post')
+            input(type='text' name='email' placeholder='Please enter email' required)
+            input(type='password' name='password' placeholder='Please enter password' required)
+            input(type='submit' value='Login')
+    include ../partial/footer
+

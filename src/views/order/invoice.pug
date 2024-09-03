@@ -1,0 +1,64 @@
+include ../partial/head
+link(rel='stylesheet' href='/static/style/invoice.css')
+body
+
+#invoice(class='invoice-box invoice')
+    table
+        tr.top
+            td(colspan='10')
+                table
+                    tr
+                        td.title
+                            h3 Faktur
+                        td
+                            | No Transaksi : #{order.id}
+                            br
+                            |
+                            span(id='order-date')=order.created_at
+                            //br
+                            //|  Due: February 1, 2023
+        tr.information
+            td(colspan='2')
+                table
+                    tr
+                        td
+                            | Pelanggan: #{order.customer_name}
+                            br
+                            | Alamat: #{order.address ? order.address : '-'}
+                            br
+                            | NoHp: #{order.phone ? order.phone : '-'}
+                        //td
+                        //    | Acme Corp.
+                        //    br
+                        //    |                             John Doe
+                        //    br
+                        //    |                             john@example.com
+        tr.heading
+            td No
+            td(class='text-center') Nama Produk
+            td(class='text-center') Jumlah
+            td(class='text-center') Harga
+            td(class='text-center') Sub Total
+        - var no = 0;
+        each od in detailOrder
+            tr.item
+                - no = no+1;
+                td=no
+                td(class='text-center')=od.product_name
+                td(class='text-center')=od.quantity
+                td(class="price text-center")=od.price
+                td(class='subtotal text-center')=(od.quantity * od.price)
+        tr.total
+            td
+            td
+            td
+            td
+            td(id='total' style='') Total: 0
+        tr.total
+            td
+            td
+            td
+            td
+            td(id='totalPaid')=order.total_paid
+button(id='download-btn' class='btn btn-dark') Download Invoice as Image
+script(src='/static/script/invoice.js')

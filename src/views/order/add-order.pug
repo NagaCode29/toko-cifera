@@ -1,0 +1,28 @@
+include ../partial/head
+link(rel='stylesheet' href='/static/style/dashboard.css')
+body(class="bg-dark")
+    include ../partial/sidebar
+
+    div.content(class='ps-5')
+        a(class='btn btn-outline-secondary text-light mb-2' href='/orders') orders
+
+        h2(class='my-4 text-light') Add Order
+        div(class='row')
+            form(action='/orders/add-order' method='post')
+                select(class=`js-example-basic-single` name=`customer_id` style="width: 30%;")
+                    each customer in customers
+                        option(value=`${customer.id}`)=customer.name
+
+                - var i = 0;
+                while i < row
+                    - i = i+1
+                    div(class='mt-2')
+                        select(class=`js-example-basic-single` name=`product_id#${i}` style="width: 30%")
+                              each product in products
+                                  option(value=`${product.id}`)=product.name
+                        input(type="number" class="mx-2 quantity" style="width: 30%" name=`quantity#${i}` placeholder=`quantity` required)
+                        input(type="number" class="mx-2 price" style="width: 30%" name=`price#${i}` placeholder='price' required)
+                //h3(class='text-light my-4' id='total') Total: 0
+                button(type='submit' class='btn btn-primary form-control my-4') Add
+    script(src='/static/script/add-order.js')
+    include ../partial/footer

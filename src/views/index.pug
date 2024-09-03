@@ -1,0 +1,14 @@
+include partial/head
+link(rel='stylesheet' href='/static/style/dashboard.css')
+body(class="bg-dark text-light")
+    include partial/sidebar
+
+    div.content(class='ps-5')
+        h2(class='my-4') Dashboard
+
+        canvas(id="myChart")
+        h2(class='text-center my-2') Total sales in a week
+        h2(class='text-dark') dsds
+    script(src='/static/script/dashboard.js')
+
+    include partial/footer

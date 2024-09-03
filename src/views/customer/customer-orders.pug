@@ -1,0 +1,88 @@
+include ../partial/head
+link(rel='stylesheet' href='/static/style/dashboard.css')
+body(class="bg-dark text-light")
+    include ../partial/sidebar
+
+    div.content(class='ps-5')
+        a(class='btn btn-outline-secondary text-light mb-2' href='/customers') customers
+
+        h2(class='my-4') Customer Orders
+
+        div.search
+            div.row
+                div.col-lg-6
+                    form(action=`/customers/orders-detail/${customer.id}/search` method='get')
+                        input(type='date' class='mx-1' name='start')
+                        input(type='date' class='mx-1' name='end')
+                        button(type='submit' class='btn btn-primary btn-sm mb-1 mx-1') Search
+                div.col-lg-2
+                div.col-lg-4
+                    //input(class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id='keyword')
+        if !!message
+            div(class=`alert alert-${status}` role="alert")=message
+        table(class='table table-success table-striped sortable')
+            thead
+                tr
+                    th(scope='col') No
+                    th(scope='col') Created At
+                    th(scope='col') Customer Name
+                    th(scope='col') Total
+                    th(scope='col') Total Paid
+                    th(scope='col') Action
+            tbody(id='data-orders')
+                - var no = 0;
+                - var totalPaid = 0;
+                - var totalOrder = 0;
+                each order in orders
+                    - totalPaid += Number(order.total_paid);
+                    - totalOrder += Number(order.total);
+                    tr
+                        - no = no+1;
+                        td(scope='row') #{no}
+                        td(id=`date${no}` class='date')=order.created_at
+                        td=order.customer_name
+                        td(class='total')=order.total
+                        td(class='total_paid')=order.total_paid
+                        td
+                            a(class='btn btn-info btn-sm mx-1' href=`/orders/detail/${order.id}`) Detail
+                            button(type='button' class='btn btn-outline-success btn-sm mx-1 mt-1' data-bs-toggle='modal' data-bs-target=`#modalUpdateOrder${order.id}`) update
+                            button(type='button' class='btn btn-outline-danger btn-sm mx-1' data-bs-toggle='modal' data-bs-target=`#modal${order.id}`) Delete
+
+                            //Modal update
+                            div(class='modal fade text-dark' id=`modalUpdateOrder${order.id}` tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+                                div(class='modal-dialog modal-dialog-centered')
+                                    div.modal-content
+                                        div.modal-header
+                                            h1(class="modal-title fs-5" id="exampleModalLabel") Update Order
+                                            button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                                        div.modal-body
+                                            form(action=`/orders/update-order/${order.id}` method='post')
+                                                div(class='mb-2')
+                                                    label(for="total_paid" class="form-label") Paid
+                                                    input(type="number" class="form-control" id="total_paid" name='total_paid' value=`${order.total_paid}`)
+                                                button(type='submit' class='btn btn-success form-control mt-2') Update
+
+                            // Modal Delete
+                            div(class='modal fade' id=`modal${order.id}` tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+                                div(class='modal-dialog modal-dialog-centered')
+                                    div.modal-content
+                                        div.modal-header
+                                            h1(class="modal-title fs-5" id="exampleModalLabel") Confirmation
+                                            button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                                        div.modal-body
+                                            h3 Sure??
+                                        div.modal-footer
+                                            button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
+
+                                            a(class="btn btn-outline-danger" href=`/orders/delete-order/${order.id}`) delete
+                tr
+                    td
+                    td
+                    td
+                    td(id='totalOrder')=totalOrder
+                    td(id='totalPaid')=totalPaid
+                    td
+
+
+    script(src='/static/script/order.js')
+    include ../partial/footer

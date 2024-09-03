@@ -1,0 +1,37 @@
+include ../partial/head
+link(rel='stylesheet' href='/static/style/dashboard.css')
+body(class="bg-dark text-light")
+    include ../partial/sidebar
+
+    div.content(class='ps-5')
+        a(class='btn btn-outline-secondary text-light mb-2' href='/orders') orders
+
+        h3(class='my-4') Order detail (#{order.id})
+        h5 Name: #{order.customer_name}
+        h5(id='order-date' class='mb-4')=order.created_at
+
+        table(class='table table-secondary table-striped sortable')
+            thead
+                tr
+                    th(scope='col') No
+                    th(scope='col') Product-Name
+                    th(scope='col') Quantity
+                    th(scope='col') Price
+                    th(scope='col') Subtotal
+            tbody(id='data-orders')
+                -var no = 0;
+                each od in detailOrder
+                    tr
+                        - no = no+1;
+                        td(scope='row') #{no}
+                        td=od.product_name
+                        td=od.quantity
+                        td(class="price")=od.price
+                        td(class='subtotal')=(od.quantity * od.price)
+
+        h4(id='total' style='text-align:right') Total: 0
+        h4(id='totalPaid' style='text-align:right')=order.total_paid
+
+        a(class='btn btn-success form-control mt-3 text-light' href=`/orders/invoice/${order.id}`) Invoice
+    script(src='/static/script/detail-order.js')
+    include ../partial/footer

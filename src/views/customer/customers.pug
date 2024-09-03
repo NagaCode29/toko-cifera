@@ -1,0 +1,102 @@
+include ../partial/head
+link(rel='stylesheet' href='/static/style/dashboard.css')
+body(class="bg-dark text-light")
+    include ../partial/sidebar
+
+    div.content(class='ps-5')
+        button(type='button' class='btn btn-outline-secondary text-light mb-2' data-bs-toggle='modal' data-bs-target=`#modalAddCustomer`) add-customer
+
+        h2(class='my-4') Customers
+
+        div.search
+            div.row
+                div.col-lg-6
+                    form(action='/customers/search' method='get')
+                        input(type='date' class='mx-1' name='start')
+                        input(type='date' class='mx-1' name='end')
+                        button(type='submit' class='btn btn-primary btn-sm mb-1 mx-1') Search
+                div.col-lg-2
+                div.col-lg-4
+                    input(class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id='keyword')
+        if !!message
+            div(class=`alert alert-${status}` role="alert")=message
+        table(class='table table-light table-striped sortable')
+            thead
+                tr
+                    th(scope='col') No
+                    th(scope='col') Created-At
+                    th(scope='col') Customer-Id
+                    th(scope='col') Name
+                    th(scope='col') Phone
+                    th(scope='col') Action
+            tbody(id='data-customers')
+                - var no = 0;
+                each customer in customers
+                    tr
+                        - no = no+1;
+                        td(scope='row') #{no}
+                        td(id=`date${no}` class='date')=customer.created_at
+                        td=customer.id
+                        td=customer.name
+                        td=customer.phone
+                        td
+                            a(class='btn btn-info btn-sm mx-1' href=`/customers/orders-detail/${customer.id}`) Detail
+                            button(type='button' class='btn btn-outline-success btn-sm mx-1' data-bs-toggle='modal' data-bs-target=`#modalUpdateCustomer${customer.id}`) update
+                            button(type='button' class='btn btn-outline-danger btn-sm mx-1' data-bs-toggle='modal' data-bs-target=`#modal${customer.id}`) Delete
+
+                            // Modal Delete
+                            div(class='modal fade' id=`modal${customer.id}` tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+                                div(class='modal-dialog modal-dialog-centered')
+                                    div.modal-content
+                                        div.modal-header
+                                            h1(class="modal-title fs-5" id="exampleModalLabel") Confirmation
+                                            button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                                        div.modal-body
+                                            h3 Sure??
+                                        div.modal-footer
+                                            button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
+
+                                            a(class="btn btn-outline-danger" href=`/customers/delete-customer/${customer.id}`) delete
+
+                            // Modal update
+                            div(class='modal fade text-dark' id=`modalUpdateCustomer${customer.id}` tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+                                div(class='modal-dialog modal-dialog-centered')
+                                    div.modal-content
+                                        div.modal-header
+                                            h1(class="modal-title fs-5" id="exampleModalLabel") Update Customer
+                                            button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                                        div.modal-body
+                                            form(action=`/customers/update-customer/${customer.id}` method='post')
+                                                div(class='mb-2')
+                                                    label(for="name" class="form-label") Name
+                                                    input(type="text" class="form-control" id="name" name='name' value=`${customer.name}`)
+                                                div(class='mb-2')
+                                                    label(for="phone" class="form-label") Phone
+                                                    input(type="text" class="form-control" id="phone" name='phone' value=`${customer.phone}`)
+                                                div(class='mb-3')
+                                                    label(for="address" class="form-label") Address
+                                                    input(type="text" class="form-control" id="address" name='address' value=`${customer.address}`)
+                                                button(type='submit' class='btn btn-success form-control mt-2') Update
+        h2(class='text-dark') dsds
+
+    // Modal Add Customer
+    div(class='modal fade text-dark' id='modalAddCustomer' tabindex='-1' aria-labelledby="exampleModalLabel" aria-hidden="true")
+        div(class='modal-dialog modal-dialog-centered')
+            div.modal-content
+                div.modal-header
+                    h1(class="modal-title fs-5" id="exampleModalLabel") Add Customer
+                    button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                div.modal-body
+                    form(action='/customers/add-customer' method='post')
+                        div(class='mb-2')
+                            label(for="name" class="form-label") Name
+                            input(type="text" class="form-control" id="name" name='name' required)
+                        div(class='mb-2')
+                            label(for="phone" class="form-label") Phone
+                            input(type="text" class="form-control" id="phone" name='phone')
+                        div(class='mb-3')
+                            label(for="address" class="form-label") Address
+                            input(type="text" class="form-control" id="address" name='address')
+                        button(type='submit' class='btn btn-primary form-control mt-2') Add
+    script(src='/static/script/customer.js')
+    include ../partial/footer
