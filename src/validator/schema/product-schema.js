@@ -2,12 +2,12 @@ import Joi from "joi";
 
 export default {
     addProductSchema: Joi.object({
-        id: Joi.string().trim().min(3).required(),
+        id: Joi.string().trim().min(3).pattern(/^\S+$/, 'no spaces').required(),
         name: Joi.string().trim().min(4).required(),
         stock: Joi.number().integer().min(1).required(),
     }),
     updateProductSchema: Joi.object({
-        id: Joi.string().trim().min(3).required(),
+        id: Joi.string().trim().min(3).pattern(/^\S+$/, 'no spaces').required(),
         name: Joi.string().trim().min(4).required(),
         stock: Joi.number().integer().min(1).required(),
     }),

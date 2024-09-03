@@ -168,7 +168,7 @@ class OrderService {
 
         // Check total_paid
         const {total} = await this.#orderDetailRepository.getTotalOrderById(order.id);
-        console.log(total, total_paid)
+
         if (total_paid > total){
             throw new InvariantError('Total paid wrong. Total paid <= Total')
         }
