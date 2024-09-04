@@ -1,0 +1,3 @@
+
+[dev]
+  command = "npm run start" # Perintah untuk menjalankan server Node.js
