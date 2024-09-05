@@ -27,7 +27,7 @@ class ProductRepository{
     async save(product){
         const conn = await pool.getConnection();
         try{
-            const [result] = await conn.execute(`INSERT INTO products(id,name,stock) VALUES(?,?,?)`,[product.id,product.name, product.stock]);
+            const [result] = await conn.execute(`INSERT INTO products(id,name,stock,updated_at) VALUES(?,?,?,NOW())`,[product.id,product.name, product.stock]);
 
             return result;
         }finally {
@@ -60,7 +60,7 @@ class ProductRepository{
     async updateStock(id, stock){
         const conn = await pool.getConnection();
         try{
-            const [result] = await conn.execute(`UPDATE products SET stock=? WHERE id=?`,[stock, id]);
+            const [result] = await conn.execute(`UPDATE products SET stock=?, updated_at = NOW() WHERE id=?`,[stock, id]);
 
             return result;
         }finally {
