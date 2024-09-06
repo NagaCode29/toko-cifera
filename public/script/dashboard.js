@@ -7,7 +7,6 @@ const ctx = document.getElementById('myChart');
 
         const responseTotalSales = await fetch('/orders/total-sales-in-week');
         const totalSales = await responseTotalSales.json();
-
         new Chart(ctx, {
             type: 'line',
             data: {

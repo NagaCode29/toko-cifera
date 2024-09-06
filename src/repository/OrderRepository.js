@@ -26,7 +26,7 @@ class OrderRepository{
     async save(order){
         const conn = await pool.getConnection();
         try{
-            const [result] = await conn.execute(`INSERT INTO orders(id,customer_id) VALUES(?,?)`,[order.id, order.customer_id])
+            const [result] = await conn.execute(`INSERT INTO orders(id,customer_id,updated_at) VALUES(?,?,NOW())`,[order.id, order.customer_id])
 
             return result;
         }finally {

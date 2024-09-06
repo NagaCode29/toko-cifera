@@ -4,7 +4,7 @@ class CustomerRepository {
     async save(customer){
         const conn = await pool.getConnection();
         try{
-            const [result] = await conn.execute('INSERT INTO `customers`(id,name,phone,address) VALUES(?,?,?,?)',[customer.id,customer.name,customer.phone,customer.address]);
+            const [result] = await conn.execute('INSERT INTO `customers`(id,name,phone,address,updated_at) VALUES(?,?,?,?,NOW())',[customer.id,customer.name,customer.phone,customer.address]);
             return result;
         }finally {
             conn.release();

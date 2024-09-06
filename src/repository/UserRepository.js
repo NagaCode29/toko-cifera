@@ -4,7 +4,7 @@ class UserRepository {
     async save(user){
         const conn = await pool.getConnection();
         try {
-            const [result] = await conn.execute('INSERT INTO `users`(id,email,password,name) VALUES(?,?,?,?)',[user.id, user.email,user.password,user.name]);
+            const [result] = await conn.execute('INSERT INTO `users`(id,email,password,name,updated_at) VALUES(?,?,?,?,NOW())',[user.id, user.email,user.password,user.name]);
 
             return result;
         }finally {
@@ -36,11 +36,6 @@ class UserRepository {
         }
     }
 
-    // For test
-    async deleteAll(){
-        const conn = await pool.getConnection();
-        await conn.execute('DELETE FROM users');
-    }
 }
 
 export default UserRepository;
